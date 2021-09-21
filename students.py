@@ -17,13 +17,14 @@ import csv
 
 student_fields = ['first_name', 'last_name', 'email', 'age', 'address', 'gender']
 
-STUDENTS = []
+#STUDENTS = []
 
 TEST_STUDENTS = [
     ['Mary', 'D', 'mail@mail.com', '19', 'Huston', 'F'],
     ['John', 'S', 'new_mail@mail.com', '21', 'London', 'M'],
     ['Andy', 'H', 'more_mail@mail.com', 'sexteen', 'Brighton', 'M']
 ]
+
 
 class Student:
 
@@ -34,47 +35,105 @@ class Student:
         self.age = age
         self.address = address
         self.gender = gender
-        
+        self.inner_list = [self.first_name, self.last_name, self.email, self.age, self.address, self.gender]
+
+    def __str__(self):
+        return self.first_name.capitalize()
+    '''    
     def print_student(self):
         print(self.first_name, self.last_name, self.email, self.age, self.address, self.gender)
+    '''
 
 
-class Student_lis:
-    stud_list = []
-    
-    def add_student(self, *stud):
-        l = Student(*stud)
-        self.stud_list.append(l)
-    
-    def print_stud(self):
-        for student in self.stud_list:
-#            print(student)
-            student.print_student()
+class Student_list:
+#    stud_list = []
+    def __init__(self, students_list):
+        if type(students_list) == list:
+            self.students_list = students_list
+        else:
+            self.students_list = []
+
+# OLD
+    '''
+    def add_student(self, new_student):
+        if type(new_student) == list:
+            self.new_stud_ex = Student(*new_student)
+            self.students_list.append(self.new_stud_ex)
+        else:
+            print("it is not list type!")
+    '''
+
+# NEW
+    def add_student(self):
+        ''' function that adds a new student to list STUDENTS as dictionary '''
+        temp_stud = []
+        for field in range(len(student_fields)):
+            temp_stud.append( input('Enter {}\t'.format(student_fields[field])) )
+            if field == 'age':
+                try:
+                    int(student['age'])
+                except:
+                    student['age'] = input('Enter age as number\t')
+#        students_list.add_student(temp_stud)
+        self.new_stud_ex = Student(*temp_stud)
+        self.students_list.append(self.new_stud_ex)
+
+
+    #NEW!!!
+    def print_students(self):
+        for student in self.students_list:
+            print(student, " - is a student")
+            print(student.inner_list)
+            # здесь можно и перебором через student.inner_list, но пока что так, 1-1
+            print(' '.join(student_fields[0].capitalize().split('_')),":", '\t', student.first_name) 
+            print(' '.join(student_fields[1].capitalize().split('_')),":", '\t', student.last_name)
+            print(' '.join(student_fields[2].capitalize().split('_')),":", '\t', student.email)
+            print(' '.join(student_fields[3].capitalize().split('_')),":", '\t', student.age)
+            print(' '.join(student_fields[4].capitalize().split('_')),":", '\t', student.address)
+            print(' '.join(student_fields[5].capitalize().split('_')),":", '\t', student.gender)
+            print()
+
+
+
+# NEW
+    def load_students(self):
+        for test_student in TEST_STUDENTS:
+            self.new_stud_ex = Student(*test_student)
+            self.students_list.append(self.new_stud_ex)
+
+
+    def dump_json(self):
+        ''' function that save all students as dict into file JSON stored/created in "data" folder  '''
+        with open('data\\student_data.json', 'w') as file:
+            temp_stud = []
+            for student in self.students_list:
+                temp_stud.append(student.inner_list) 
+            json.dump(temp_stud, file)
+
+
+    def load_json(self, file_path='data\\student_data.json'):
+        ''' function that load all students as dict from file JSON stored in "data" folder '''
+        with open(file_path, 'r') as read_file:
+#            temp_stud = []
+#            self.students_list.extend(json.load(read_file))
+#            temp_stud.append(json.load(read_file))
+            temp_stud = (json.load(read_file))
+            print(temp_stud)
+            for student in temp_stud:
+                self.new_stud_ex = Student(*student)
+                self.students_list.append(self.new_stud_ex)
+            
+
+
 
     def call_stud_list(self):
-        return stud_list
-        
+        return students_list        
+
 
 class Group:
-
     def __init__(self, group_name, stud_list):
         self.group_name = group_name
         self.stud_list = stud_list
-
-
-def add_student():
-    ''' function that adds a new student to list STUDENTS as dictionary '''
-
-    temp_stud = []
-    for field in range(len(student_fields)):
-        temp_stud.append( input('Enter {}\t'.format(student_fields[field])) )
-        if field == 'age':
-            try:
-                int(student['age'])
-            except:
-                student['age'] = input('Enter age as number\t')
-    global_student_class_list.add_student(*temp_stud)
-#    global_student_class_list.print_stud()
 
    
 def calculate_avg_age():
@@ -91,41 +150,6 @@ def calculate_avg_age():
         print(str(e))
 
 
-#1.1. Змінити функцію print_student(student) так,
-# щоб вона виводила назви полів у людино-читаємому вигляді:
-# кожне з великої літери, з пробілами замість "_"
-
-def print_student(student):
-    for field in student:
-        print(' '.join(field.capitalize().split('_')),":", '\t', student[field])
-    print('\n')
-
-
-#1.2. Написати функцію print_students_list() , 
-# яка виводитиме весь список студентів 
-# (викликатиме у циклі print_student(student)
-# для кожного студента та візуально відокремлюватиме
-# вивід інформації про кожного зі студентів)
-
-def print_students_list():
-    '''Call print_student() for every student in STUDENTS'''
-    global_student_class_list.print_stud()
-    print(global_student_class_list)
-#    for student in global_student_class_list:
-        
-
-def load_students():
-    
-    for test_student in TEST_STUDENTS:
-        global_student_class_list.add_student(*test_student)
-
-
-def dump_studens():
-    ''' function that save all students as dict into file JSON stored/created in "data" folder  '''
-    with open('data\\student_data.json', 'w') as file:
-        json.dump(STUDENTS, file)
-
-
 def dump_csv():
     ''' function that save all students as dict into file CSV stored/created in "data" folder  '''
     with open('data\\student_data.csv', 'w') as file:
@@ -134,11 +158,14 @@ def dump_csv():
         for student in STUDENTS:
             writer.writerow(student)
 
-
-def load_from_json(file_path='data\\student_data.json'):
+"""
+# OLD
+def load_json(file_path='data\\student_data.json'):
     ''' function that load all students as dict from file JSON stored in "data" folder '''
     with open(file_path, 'r') as read_file:
         STUDENTS.extend(json.load(read_file))
+"""
+
 
 
 # 2.2. закінчити функцію, яка виконує
@@ -154,7 +181,8 @@ def load_csv(file_path='data\\student_data.csv'):
 
 
 
-
+'''
+# OLD
 ACTIONS = {
     'add': add_student,
     'avg_age': calculate_avg_age,
@@ -165,9 +193,39 @@ ACTIONS = {
     'load_json': load_from_json,
     'load_csv': load_csv
 }
+'''
+
+# пришлось это перенести над ACTIONS потому что раньше интерпретатор не видел global_student_class_list и выдавал сообщение
+# NameError: name 'global_student_class_list' is not defined
+# 
+list_students = []
+global_student_class_list = Student_list(list_students)
+
+ACTIONS = {
+    'add': global_student_class_list.add_student,
+    'avg_age': calculate_avg_age,
+    'load': global_student_class_list.load_students,
+    'print': global_student_class_list.print_students,
+    'dump_json': global_student_class_list.dump_json,
+    'dump_csv': dump_csv,
+    'load_json': global_student_class_list.load_json,
+    'load_csv': load_csv
+}
+
 
 if __name__ == '__main__':
-    global_student_class_list = Student_lis()
+#    list_students = []
+#    global_student_class_list = Student_list(list_students)
+
+
+#    global_student_class_list.load_students()
+
+#    global_student_class_list.load_json()
+  
+#    global_student_class_list.print_students()
+
+#    global_student_class_list.dump_json()
+
     while True:
         action = input('Desired action:\t')
         if action in ACTIONS:
@@ -175,3 +233,15 @@ if __name__ == '__main__':
         else:
             break
 
+'''
+ACTIONS = {
+    'add': add_student,
+    'avg_age': calculate_avg_age,
+    'load': load_students,
+    'print': global_student_class_list.print_students,
+    'dump': dump_studens,
+    'dump_csv': dump_csv,
+    'load_json': load_from_json,
+    'load_csv': load_csv
+}
+'''
