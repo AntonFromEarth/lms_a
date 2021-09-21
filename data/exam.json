@@ -12,4 +12,3 @@
 {
 "question": "What is 'Zen of Python'", "answers": ["It is collection of principles of right writing of programm on Python.", "It is built in function of Python that conwers tupple-type variable to zen-type variable", "It is built-in word that make nice sounds"], "correct_answer": "1"
 }
-]
