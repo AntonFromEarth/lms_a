@@ -10,6 +10,13 @@
 4. Збережіть на майбутнє посилання на офіційний 
  документ по Python MRO: https://www.python.org/download/releases/2.3/mro/
 
+ ДЗ від 22.09.2021:
+1. У классі Student додати можливість порівняння студентів за віком
+2. У классі Student додати збереження списку всіх створених об'єктів
+3. У классі Student додати альтернативну можливість створення нового об'єкту 
+ зі словника
+4. У Beetroot LMS опрацювати наступне заняття "Функції як об’єкти першого класу"
+
 
 '''
 import json
@@ -28,7 +35,8 @@ TEST_STUDENTS = [
 
 class Student:
 
-    def __init__(self, first_name, last_name, email, age, address, gender):
+    def __init__(self, first_name = 'Noname', last_name = 'Nonamovich', email = 'Nomail',
+     age = 'Noage', address = 'Noadress', gender = 'Nogender'):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -37,13 +45,49 @@ class Student:
         self.gender = gender
         self.inner_list = [self.first_name, self.last_name, self.email, self.age, self.address, self.gender]
 
+
     def __str__(self):
         return self.first_name.capitalize()
+
+    @classmethod
+    def from_dict(cls, dict_arg):
+        obj = cls()
+        index = 0
+        for field in student_fields:
+            setattr(obj, field, dict_arg[field])
+        return obj
+
+         
+
+
+
+    def __lt__(self, other): # lass than
+        return self.age < other.age
+
+    def __le__(self, other): # lass equal
+        return self.age <= other.age
+
+    def __eq__(self, other): # equal
+        return self.age == other.age
+
+    def __ne__(self, other): # not equal
+        return self.age != other.age
+
+    def __gt__(self, other): # greater than
+        return self.age > other.age
+
+    def __ge__(self, other): # gteater equal
+        return self.age >= other.age
+
+
+
+
     '''    
     def print_student(self):
         print(self.first_name, self.last_name, self.email, self.age, self.address, self.gender)
     '''
 
+#####################################
 
 class Student_list:
 #    stud_list = []
@@ -52,6 +96,9 @@ class Student_list:
             self.students_list = students_list
         else:
             self.students_list = []
+
+    def add_stud_to_list(self, student_inst):
+        self.students_list.append(student_inst)
 
 # OLD
     '''
@@ -69,11 +116,15 @@ class Student_list:
         temp_stud = []
         for field in range(len(student_fields)):
             temp_stud.append( input('Enter {}\t'.format(student_fields[field])) )
+            
+            '''
             if field == 'age':
                 try:
                     int(student['age'])
                 except:
                     student['age'] = input('Enter age as number\t')
+            '''
+
 #        students_list.add_student(temp_stud)
         self.new_stud_ex = Student(*temp_stud)
         self.students_list.append(self.new_stud_ex)
@@ -135,7 +186,7 @@ class Group:
         self.group_name = group_name
         self.stud_list = stud_list
 
-   
+#not work   
 def calculate_avg_age():
 
     try:
@@ -149,7 +200,7 @@ def calculate_avg_age():
     except Exception as e:
         print(str(e))
 
-
+# not work
 def dump_csv():
     ''' function that save all students as dict into file CSV stored/created in "data" folder  '''
     with open('data\\student_data.csv', 'w') as file:
@@ -171,6 +222,7 @@ def load_json(file_path='data\\student_data.json'):
 # 2.2. закінчити функцію, яка виконує
 # завантаження даних з файлу у форматі CSV.
 
+# not work
 def load_csv(file_path='data\\student_data.csv'):
     ''' function that load all students as dict from file CSV stored in "data" folder '''
     with open(file_path, 'r') as read_file:
@@ -216,9 +268,32 @@ ACTIONS = {
 if __name__ == '__main__':
 #    list_students = []
 #    global_student_class_list = Student_list(list_students)
+#    ['first_name', 'last_name', 'email', 'age', 'address', 'gender']
+    
+    some_dict = {'first_name': 'Vasya', 'last_name': 'Pupkin', 'email': 'vasiliyp@mail.com', 'age': '23', 'address':'Gorishni Plavni', 'gender': 'M'}
+
+    vasya = Student.from_dict(some_dict)
+    global_student_class_list.add_stud_to_list(vasya)
+    global_student_class_list.print_students()
+    print()
+    print(global_student_class_list.students_list[0])
+    print(global_student_class_list.students_list[0].inner_list)
 
 
-#    global_student_class_list.load_students()
+
+    '''
+
+    global_student_class_list.load_students()
+
+    print(global_student_class_list.students_list[0])
+    print(global_student_class_list.students_list[0].age)
+
+    print(global_student_class_list.students_list[1])
+    print(global_student_class_list.students_list[1].age)
+
+    print(global_student_class_list.students_list[0]<global_student_class_list.students_list[1])
+    print(global_student_class_list.students_list[0]>global_student_class_list.students_list[1])
+    '''
 
 #    global_student_class_list.load_json()
   
