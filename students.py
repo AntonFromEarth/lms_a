@@ -277,8 +277,10 @@ class Group:
         return self
         
     def __next__(self):
+        index = self.index
         if self.index < len(self.stud_list):
-            index = self.index += 1
+            index = self.index
+            self.index += 1
             return self.stud_list[index]
         else:
             raise StopIteration
